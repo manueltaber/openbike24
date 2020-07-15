@@ -18,7 +18,7 @@
     <v-bottom-navigation app grow color="primary">
       <v-btn :to="'/live'">
         <span>Live</span>
-        <v-icon>{{ mdiMapMarkerIcon }}</v-icon>
+        <v-icon>{{ mdiMapMarkerOutlineIcon }}</v-icon>
       </v-btn>
 
       <v-btn :to="'/routes'">
@@ -36,12 +36,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mdiMapMarker, mdiHistory, mdiCogOutline } from "@mdi/js";
+import { mdiMapMarkerOutline, mdiHistory, mdiCogOutline } from "@mdi/js";
 
 export default Vue.extend({
   name: "Base",
   data: () => ({
-    mdiMapMarkerIcon: mdiMapMarker,
+    mdiMapMarkerOutlineIcon: mdiMapMarkerOutline,
     mdiHistoryIcon: mdiHistory,
     mdiCogOutlineIcon: mdiCogOutline,
     activeTab: 0
