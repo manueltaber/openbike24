@@ -53,9 +53,19 @@ export async function sendEmailVerification(
 
 export async function signInWithEmailAndPassword(
   email: string,
-  password: string
+  password: string,
+  rememberMe: boolean
 ): Promise<firebase.auth.UserCredential> {
   try {
+    if (rememberMe) {
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    } else {
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    }
     const signIn = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
@@ -64,6 +74,42 @@ export async function signInWithEmailAndPassword(
     return signIn;
   } catch (error) {
     console.error("signInWithEmailAndPassword failed!");
+    console.error(error);
+    console.error(error.code);
+    console.error(error.message);
+    throw new FirebaseError(error.code, error.message);
+  }
+}
+
+export async function signInWithFacebook(): Promise<
+  firebase.auth.UserCredential
+> {
+  try {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    const signIn = await firebase.auth().signInWithPopup(provider);
+    console.info("signIn done");
+    console.info(signIn);
+    return signIn;
+  } catch (error) {
+    console.error("signInWithFacebook failed!");
+    console.error(error);
+    console.error(error.code);
+    console.error(error.message);
+    throw new FirebaseError(error.code, error.message);
+  }
+}
+
+export async function signInWithGoogle(): Promise<
+  firebase.auth.UserCredential
+> {
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const signIn = await firebase.auth().signInWithPopup(provider);
+    console.info("signIn done");
+    console.info(signIn);
+    return signIn;
+  } catch (error) {
+    console.error("signInWithGoogle failed!");
     console.error(error);
     console.error(error.code);
     console.error(error.message);

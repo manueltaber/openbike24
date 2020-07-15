@@ -3,7 +3,9 @@
     <v-card-title>
       <v-row align="center" justify="center">
         <v-avatar color="primary" size="62">
-          <span class="white--text headline">OB</span>
+          <span>
+            <v-icon dark>{{ mdiBikeFastIcon }}</v-icon>
+          </span>
         </v-avatar>
       </v-row>
     </v-card-title>
@@ -82,9 +84,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mdiFacebook, mdiGoogle } from "@mdi/js";
+import { mdiBikeFast, mdiFacebook, mdiGoogle } from "@mdi/js";
 import {
   createUserWithEmailAndPassword,
+  signInWithFacebook,
+  signInWithGoogle,
   sendEmailVerification
 } from "@/components/authentication/firebase";
 
@@ -96,6 +100,7 @@ export default Vue.extend({
       import("@/components/authentication/PasswordInput.vue")
   },
   data: () => ({
+    mdiBikeFastIcon: mdiBikeFast,
     mdiFacebookIcon: mdiFacebook,
     mdiGoogleIcon: mdiGoogle,
     email: null as string | null,
@@ -128,11 +133,23 @@ export default Vue.extend({
         }
       }
     },
-    signUpWithFacebook: function() {
-      console.info("signupwithfacebook");
+    signUpWithFacebook: async function() {
+      this.doingSignUp = true;
+      try {
+        await signInWithFacebook();
+      } catch (error) {
+        this.errorMessage = error;
+        this.doingSignUp = false;
+      }
     },
-    signUpWithGoogle: function() {
-      console.info("signupwithgoogle");
+    signUpWithGoogle: async function() {
+      this.doingSignUp = true;
+      try {
+        await signInWithGoogle();
+      } catch (error) {
+        this.errorMessage = error;
+        this.doingSignUp = false;
+      }
     },
     alreadyHaveAccount: function() {
       this.$emit("already-have-account");

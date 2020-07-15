@@ -3,7 +3,9 @@
     <v-card-title>
       <v-row align="center" justify="center">
         <v-avatar color="primary" size="62">
-          <span class="white--text headline">OB</span>
+          <span>
+            <v-icon dark>{{ mdiBikeFastIcon }}</v-icon>
+          </span>
         </v-avatar>
       </v-row>
     </v-card-title>
@@ -83,11 +85,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mdiFacebook, mdiGoogle } from "@mdi/js";
+import { mdiBikeFast, mdiFacebook, mdiGoogle } from "@mdi/js";
 import firebase from "firebase";
 import {
   FirebaseError,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signInWithFacebook,
+  signInWithGoogle
 } from "@/components/authentication/firebase";
 
 export default Vue.extend({
@@ -98,11 +102,12 @@ export default Vue.extend({
       import("@/components/authentication/PasswordInput.vue")
   },
   data: () => ({
+    mdiBikeFastIcon: mdiBikeFast,
     mdiFacebookIcon: mdiFacebook,
     mdiGoogleIcon: mdiGoogle,
     email: null as string | null,
     password: null as string | null,
-    rememberMe: false,
+    rememberMe: true,
     errorMessage: null as string | null,
     doingSignIn: false
   }),
@@ -133,11 +138,14 @@ export default Vue.extend({
   },
   methods: {
     signIn: async function() {
-      this.doingSignIn = true;
-
       if (this.email && this.password) {
+        this.doingSignIn = true;
         try {
-          await signInWithEmailAndPassword(this.email, this.password);
+          await signInWithEmailAndPassword(
+            this.email,
+            this.password,
+            this.rememberMe
+          );
         } catch (error) {
           if (error instanceof FirebaseError) {
             this.errorMessage = error.message;
@@ -148,11 +156,31 @@ export default Vue.extend({
         }
       }
     },
-    signInWithFacebook: function() {
-      console.info("signinwithfacebook");
+    signInWithFacebook: async function() {
+      this.doingSignIn = true;
+      try {
+        await signInWithFacebook();
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          this.errorMessage = error.message;
+          this.doingSignIn = false;
+        } else {
+          throw error;
+        }
+      }
     },
-    signInWithGoogle: function() {
-      console.info("signinwithgoogle");
+    signInWithGoogle: async function() {
+      this.doingSignIn = true;
+      try {
+        await signInWithGoogle();
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          this.errorMessage = error.message;
+          this.doingSignIn = false;
+        } else {
+          throw error;
+        }
+      }
     },
     newAccount: function() {
       this.$emit("new-account");
