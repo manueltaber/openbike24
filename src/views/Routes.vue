@@ -42,7 +42,7 @@
 import Vue from "vue";
 import { mdiDelete } from "@mdi/js";
 import { Route } from "./PositionData";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 export default Vue.extend({
   name: "Routes",

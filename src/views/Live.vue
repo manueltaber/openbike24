@@ -103,7 +103,7 @@
         Stop tracking
       </v-btn>
     </v-card-actions>
-    <v-dialog v-if="trackingDialogVisible" :value="true">
+    <v-dialog v-if="trackingDialogVisible" :value="true" :max-width="300">
       <v-card>
         <v-card-title>Stop tracking</v-card-title>
         <v-card-text>Sure stop tracking?</v-card-text>
@@ -133,7 +133,7 @@ import {
   mdiTimerOffOutline
 } from "@mdi/js";
 import { Route } from "./PositionData";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 export default Vue.extend({
   name: "Live",
@@ -202,6 +202,9 @@ export default Vue.extend({
     }
   },
   mounted: async function() {
+    firebase.analytics().logEvent("Live View Mounted");
+    console.info("do");
+
     if ("geolocation" in navigator) {
       /* geolocation funktioniert */
       this.geolocationBrowserSupport = true;

@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 export class FirebaseError extends Error {
   public code?: string = undefined;
