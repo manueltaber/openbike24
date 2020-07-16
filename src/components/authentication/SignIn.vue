@@ -27,7 +27,12 @@
         :disabled="componentsDisabled"
       ></v-checkbox>
       <v-spacer></v-spacer>
-      <v-btn color="primary" text :disabled="componentsDisabled">
+      <v-btn
+        color="primary"
+        text
+        :disabled="componentsDisabled"
+        @click="resetPassword"
+      >
         Reset password
       </v-btn>
     </v-card-actions>
@@ -137,6 +142,9 @@ export default Vue.extend({
     });
   },
   methods: {
+    resetPassword: async function() {
+      this.$emit("reset-password", this.email ? this.email : null);
+    },
     signIn: async function() {
       if (this.email && this.password) {
         this.doingSignIn = true;

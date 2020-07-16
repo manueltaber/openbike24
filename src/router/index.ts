@@ -54,6 +54,15 @@ const routes: Array<RouteConfig> = [
           import(
             /* webpackChunkName: "signup" */ "../views/authentication/SignUp.vue"
           )
+      },
+      {
+        path: "/authentication/resetpassword/:prefillEmail?",
+        name: "ResetPassword",
+        component: () =>
+          import(
+            /* webpackChunkName: "resetpassword" */ "../views/authentication/ResetPassword.vue"
+          ),
+        props: true
       }
     ]
   }

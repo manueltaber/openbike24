@@ -51,6 +51,20 @@ export async function sendEmailVerification(
   }
 }
 
+export async function sendPasswordResetEmail(
+  emailAddress: string
+): Promise<void> {
+  try {
+    await firebase.auth().sendPasswordResetEmail(emailAddress);
+  } catch (error) {
+    console.error("sendPasswordResetEmail failed!");
+    console.error(error);
+    console.error(error.code);
+    console.error(error.message);
+    throw new FirebaseError(error.code, error.message);
+  }
+}
+
 export async function signInWithEmailAndPassword(
   email: string,
   password: string,
