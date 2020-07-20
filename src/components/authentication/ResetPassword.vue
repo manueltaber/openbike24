@@ -27,14 +27,18 @@
     </v-card-text>
     <v-card-text v-if="!donePasswortReset">
       <v-form>
-        <email-input v-model="email" :disabled="componentsDisabled" />
+        <email-input
+          v-model="email"
+          :disabled="componentsDisabled"
+          @confirm="resetPassword"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions v-if="!donePasswortReset">
       <v-btn
         color="primary"
         block
-        :disabled="componentsDisabled"
+        :disabled="resetPasswordDisabled"
         :loading="componentsDisabled"
         @click="resetPassword"
       >
@@ -74,6 +78,13 @@ export default Vue.extend({
     donePasswortReset: false
   }),
   computed: {
+    resetPasswordDisabled: function(): boolean {
+      if (this.email) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     componentsDisabled: function(): boolean {
       return this.doingPasswordReset;
     }
@@ -87,6 +98,7 @@ export default Vue.extend({
         this.doingPasswordReset = true;
         try {
           await sendPasswordResetEmail(this.email);
+          this.errorMessage = null;
           this.donePasswortReset = true;
           this.doingPasswordReset = false;
         } catch (error) {
