@@ -99,7 +99,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { mdiBikeFast, mdiFacebook, mdiGoogle } from "@mdi/js";
-import firebase from "firebase/app";
 import {
   FirebaseError,
   signInWithEmailAndPassword,
@@ -136,32 +135,6 @@ export default Vue.extend({
       }
     }
   },
-  mounted: function() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in.
-        // const displayName = user.displayName;
-        const email = user.email;
-        const emailVerified = user.emailVerified;
-        const photoURL = user.photoURL;
-        const isAnonymous = user.isAnonymous;
-        const uid = user.uid;
-        const providerData = user.providerData;
-        // ...
-        console.info("User is signed in");
-        console.info(email);
-        console.info(user);
-        console.info(emailVerified);
-        console.info(photoURL);
-        console.info(isAnonymous);
-        console.info(uid);
-        console.info(providerData);
-        this.$emit("successful-sign-in");
-      } else {
-        console.info("User is signed out");
-      }
-    });
-  },
   methods: {
     resetPassword: async function() {
       this.$emit("reset-password", this.email ? this.email : null);
@@ -175,6 +148,7 @@ export default Vue.extend({
             this.password,
             this.rememberMe
           );
+          this.$emit("successful-sign-in");
         } catch (error) {
           if (error instanceof FirebaseError) {
             this.errorMessage = error.message;
@@ -189,6 +163,7 @@ export default Vue.extend({
       this.doingSignIn = true;
       try {
         await signInWithFacebook();
+        this.$emit("successful-sign-in");
       } catch (error) {
         if (error instanceof FirebaseError) {
           this.errorMessage = error.message;
@@ -202,6 +177,7 @@ export default Vue.extend({
       this.doingSignIn = true;
       try {
         await signInWithGoogle();
+        this.$emit("successful-sign-in");
       } catch (error) {
         if (error instanceof FirebaseError) {
           this.errorMessage = error.message;
