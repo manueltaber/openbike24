@@ -30,10 +30,6 @@ export async function createUserWithEmailAndPassword(
   }
 }
 
-export async function getCurrentUser(): Promise<firebase.User | null> {
-  return firebase.auth().currentUser;
-}
-
 export async function sendEmailVerification(
   user: firebase.User
 ): Promise<void> {
@@ -65,21 +61,20 @@ export async function sendPasswordResetEmail(
   }
 }
 
+export async function setPersistence(rememberMe: boolean): Promise<void> {
+  const persistence = rememberMe
+    ? firebase.auth.Auth.Persistence.LOCAL
+    : firebase.auth.Auth.Persistence.SESSION;
+  return await firebase.auth().setPersistence(persistence);
+}
+
 export async function signInWithEmailAndPassword(
   email: string,
   password: string,
   rememberMe: boolean
 ): Promise<firebase.auth.UserCredential> {
   try {
-    if (rememberMe) {
-      await firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    } else {
-      await firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
-    }
+    await setPersistence(rememberMe);
     const signIn = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
@@ -99,6 +94,7 @@ export async function signInWithFacebook(): Promise<
   firebase.auth.UserCredential
 > {
   try {
+    await setPersistence(true);
     const provider = new firebase.auth.FacebookAuthProvider();
     const signIn = await firebase.auth().signInWithPopup(provider);
     console.info("signIn done");
@@ -117,6 +113,7 @@ export async function signInWithGoogle(): Promise<
   firebase.auth.UserCredential
 > {
   try {
+    await setPersistence(true);
     const provider = new firebase.auth.GoogleAuthProvider();
     const signIn = await firebase.auth().signInWithPopup(provider);
     console.info("signIn done");
@@ -129,6 +126,19 @@ export async function signInWithGoogle(): Promise<
     console.error(error.message);
     throw new FirebaseError(error.code, error.message);
   }
+}
+
+export async function getCurrentUser(): Promise<firebase.User> {
+  const result = new Promise<firebase.User>((resolve, reject) => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user != null) {
+        resolve(user);
+      } else {
+        reject(new Error("no user"));
+      }
+    });
+  });
+  return result;
 }
 
 export async function signOut(): Promise<void> {

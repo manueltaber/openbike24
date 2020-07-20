@@ -16,8 +16,16 @@
     </v-card-actions>
     <v-card-text>
       <v-form>
-        <email-input v-model="email" :disabled="componentsDisabled" />
-        <password-input v-model="password" :disabled="componentsDisabled" />
+        <email-input
+          v-model="email"
+          :disabled="componentsDisabled"
+          @confirm="signIn"
+        />
+        <password-input
+          v-model="password"
+          :disabled="componentsDisabled"
+          @confirm="signIn"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -40,7 +48,7 @@
       <v-btn
         color="primary"
         block
-        :disabled="componentsDisabled"
+        :disabled="signInDisabled"
         :loading="componentsDisabled"
         @click="signIn"
       >
@@ -119,6 +127,13 @@ export default Vue.extend({
   computed: {
     componentsDisabled: function(): boolean {
       return this.doingSignIn;
+    },
+    signInDisabled: function(): boolean {
+      if (this.email && this.password) {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   mounted: function() {
@@ -127,14 +142,20 @@ export default Vue.extend({
         // User is signed in.
         // const displayName = user.displayName;
         const email = user.email;
-        /*const emailVerified = user.emailVerified;
+        const emailVerified = user.emailVerified;
         const photoURL = user.photoURL;
         const isAnonymous = user.isAnonymous;
         const uid = user.uid;
-        const providerData = user.providerData;*/
+        const providerData = user.providerData;
         // ...
         console.info("User is signed in");
         console.info(email);
+        console.info(user);
+        console.info(emailVerified);
+        console.info(photoURL);
+        console.info(isAnonymous);
+        console.info(uid);
+        console.info(providerData);
         this.$emit("successful-sign-in");
       } else {
         console.info("User is signed out");

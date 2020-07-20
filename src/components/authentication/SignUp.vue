@@ -16,12 +16,17 @@
     </v-card-actions>
     <v-card-text>
       <v-form>
-        <email-input v-model="email" :disabled="componentsDisabled" />
+        <email-input
+          v-model="email"
+          :disabled="componentsDisabled"
+          @confirm="signUp"
+        />
         <password-input
           v-model="password"
           :disabled="componentsDisabled"
           :perform-validation="true"
           :calculate-strength="true"
+          @confirm="signUp"
         />
       </v-form>
     </v-card-text>
@@ -29,8 +34,8 @@
       <v-btn
         color="primary"
         block
-        :disabled="componentsDisabled"
-        :loading="doingSignUp"
+        :disabled="signUpDisabled"
+        :loading="componentsDisabled"
         @click="signUp"
       >
         Sign up
@@ -111,13 +116,19 @@ export default Vue.extend({
   computed: {
     componentsDisabled: function(): boolean {
       return this.doingSignUp;
+    },
+    signUpDisabled: function(): boolean {
+      if (this.email && this.password) {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   methods: {
     signUp: async function() {
-      this.doingSignUp = true;
-
       if (this.email && this.password) {
+        this.doingSignUp = true;
         try {
           const res = await createUserWithEmailAndPassword(
             this.email,

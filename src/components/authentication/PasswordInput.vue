@@ -11,6 +11,7 @@
     @click:append="showPassword = !showPassword"
     @blur="blur"
     @input="input"
+    @keydown="keydown"
   ></v-text-field>
 </template>
 
@@ -50,6 +51,11 @@ export default Vue.extend({
         this.validate(text);
       }
       this.$emit("input", text);
+    },
+    keydown: function(event: KeyboardEvent) {
+      if (event.key == "Enter") {
+        this.$emit("confirm");
+      }
     },
     validate: function(text: string) {
       if (this.performValidation) {
