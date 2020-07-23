@@ -133,6 +133,7 @@ import {
   mdiTimerOffOutline
 } from "@mdi/js";
 import { Route } from "./PositionData";
+import { getCurrentUser } from "@/components/authentication/firebase";
 import firebase from "firebase/app";
 
 export default Vue.extend({
@@ -173,7 +174,7 @@ export default Vue.extend({
   computed: {
     currentSpeedInKmHRouned: function() {
       // current speed = m/s
-      return ((this.currentSpeed * 60 * 60) / 1000).toFixed(2);
+      return (this.currentSpeed * 3.6).toFixed(2);
     },
     currentAccuracyRounded: function() {
       if (this.currentAccuracy) {
@@ -202,9 +203,6 @@ export default Vue.extend({
     }
   },
   mounted: async function() {
-    firebase.analytics().logEvent("Live View Mounted");
-    console.info("do");
-
     if ("geolocation" in navigator) {
       /* geolocation funktioniert */
       this.geolocationBrowserSupport = true;
@@ -212,15 +210,12 @@ export default Vue.extend({
       /* geolocation funktioniert NICHT */
       this.geolocationBrowserSupport = false;
     }
-    firebase.auth().onAuthStateChanged(user => {
-      this.user = user;
-      if (user != null) {
-        console.info("User ready");
-        this.activateGeolocation();
-      } else {
-        console.info("Unknown");
-      }
-    });
+    try {
+      this.user = await getCurrentUser();
+      this.activateGeolocation();
+    } catch (error) {
+      console.error(error);
+    }
   },
   beforeDestroy: function() {
     this.deactivateGeolocationWatcher();
