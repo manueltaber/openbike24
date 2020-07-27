@@ -190,13 +190,13 @@ export default Vue.extend({
     },
     currentSpeedProgress: function() {
       // 70km/h = 100%
-      const percent = (100 / 70) * this.currentSpeed;
+      const percent = (100 / 70) * (this.currentSpeed * 3.6);
       return percent;
     },
     currentSpeedColor: function() {
-      if (this.currentSpeed < 27) {
+      if (this.currentSpeed * 3.6 < 27) {
         return "green";
-      } else if (this.currentSpeed < 50) {
+      } else if (this.currentSpeed * 3.6 < 50) {
         return "orange";
       }
       return "red";
