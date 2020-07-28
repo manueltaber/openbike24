@@ -43,8 +43,7 @@ export default Vue.extend({
   data: () => ({
     mdiMapMarkerOutlineIcon: mdiMapMarkerOutline,
     mdiHistoryIcon: mdiHistory,
-    mdiCogOutlineIcon: mdiCogOutline,
-    activeTab: 0
+    mdiCogOutlineIcon: mdiCogOutline
   })
 });
 </script>

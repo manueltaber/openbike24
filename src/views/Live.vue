@@ -251,8 +251,6 @@ export default Vue.extend({
       }
     },
     setCurrentPosition: function(position: Position) {
-      console.info("new position");
-      console.info(position);
       this.currentPosition = position;
       this.currentLatitude = position.coords.latitude;
       this.currentLongitude = position.coords.longitude;

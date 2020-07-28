@@ -26,7 +26,7 @@
       <v-list-item-content>
         <v-list-item-title>{{ route.name }}</v-list-item-title>
         <v-list-item-subtitle>
-          {{ new Date(route.timestamp * 1000).toLocaleString() }}
+          {{ new Date(route.timestamp.seconds * 1000).toLocaleString() }}
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action>

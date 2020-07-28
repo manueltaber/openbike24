@@ -11,9 +11,7 @@
 <script lang="ts">
 export default {
   name: "Authentication",
-  data: () => ({
-    showSignUp: false
-  })
+  data: () => ({})
 };
 </script>
 
@@ -22,6 +20,5 @@ export default {
   background-image: url("/img/mountainbike.jpg");
   background-size: cover;
   background-color: #cccccc;
-  /*background-repeat: repeat;*/
 }
 </style>
