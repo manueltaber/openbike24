@@ -155,3 +155,18 @@ export async function signOut(): Promise<void> {
     throw new FirebaseError(error.code, error.message);
   }
 }
+
+export async function deleteUser(): Promise<void> {
+  try {
+    const deleteUser = firebase.auth().currentUser?.delete();
+    console.info("deleteUser done");
+    console.info(deleteUser);
+    return deleteUser;
+  } catch (error) {
+    console.error("deleteUser failed!");
+    console.error(error);
+    console.error(error.code);
+    console.error(error.message);
+    throw new FirebaseError(error.code, error.message);
+  }
+}

@@ -11,6 +11,14 @@
         ></v-progress-circular>
       </v-col>
     </v-row>
+    <v-row v-else-if="routes.length == 0" class="text-center">
+      <v-col cols="12">
+        <v-icon size="64">{{ mdiHistoryIcon }}</v-icon>
+      </v-col>
+      <v-col cols="12">
+        <h3>No saved routes!</h3>
+      </v-col>
+    </v-row>
     <!--<v-expansion-panels multiple>
       <v-expansion-panel v-for="route in routes" :key="route.uid">
         <v-expansion-panel-header>
@@ -31,7 +39,7 @@
       </v-list-item-content>
       <v-list-item-action>
         <v-btn icon @click="deleteRoute(route)">
-          <v-icon> {{ mdiDeleteIcon }}</v-icon>
+          <v-icon>{{ mdiDeleteIcon }}</v-icon>
         </v-btn>
       </v-list-item-action>
     </v-list-item>
@@ -40,13 +48,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mdiDelete } from "@mdi/js";
+import { mdiHistory, mdiDelete } from "@mdi/js";
 import { Route } from "./PositionData";
 import firebase from "firebase/app";
 
 export default Vue.extend({
   name: "Routes",
   data: () => ({
+    mdiHistoryIcon: mdiHistory,
     mdiDeleteIcon: mdiDelete,
     loading: true as boolean,
     user: null as firebase.User | null,
@@ -74,6 +83,7 @@ export default Vue.extend({
           .collection("routes")
           .get()
           .then(querySnapshot => {
+            this.routes = [];
             querySnapshot.forEach(doc => {
               // doc.data() is never undefined for query doc snapshots
               console.log(doc.id, " => ", doc.data());
