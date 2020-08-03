@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span v-if="!loadingUser">
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>openbike24</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { getCurrentUser } from "@/components/authentication/firebase";
 import { mdiMapMarkerOutline, mdiHistory, mdiCogOutline } from "@mdi/js";
 
 export default Vue.extend({
@@ -43,7 +44,16 @@ export default Vue.extend({
   data: () => ({
     mdiMapMarkerOutlineIcon: mdiMapMarkerOutline,
     mdiHistoryIcon: mdiHistory,
-    mdiCogOutlineIcon: mdiCogOutline
-  })
+    mdiCogOutlineIcon: mdiCogOutline,
+    loadingUser: true
+  }),
+  mounted: async function() {
+    try {
+      await getCurrentUser();
+      this.loadingUser = false;
+    } catch (error) {
+      this.$router.push("/authentication/signin");
+    }
+  }
 });
 </script>

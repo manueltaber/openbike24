@@ -7,7 +7,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     name: "Base",
-    redirect: "/authentication/signin",
+    redirect: "/live",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Base.vue"),
     children: [

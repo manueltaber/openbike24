@@ -34,11 +34,7 @@
 
         <!--<h2>Geolocation Browser Support: {{ geolocationBrowserSupport }}</h2>
         <p>{{ currentPosition }}</p>-->
-        <!--<h3>Lat {{ currentLatitude }} /Long {{ currentLongitude }}</h3>
-        <p>
-          Accuracy:
-          {{ currentAccuracyRounded ? currentAccuracyRounded : "-na-" }}m
-        </p>-->
+        <!--<h3>Lat {{ currentLatitude }} /Long {{ currentLongitude }}</h3>-->
 
         <v-row>
           <v-col cols="6">
@@ -47,7 +43,9 @@
                 <v-icon>{{ mdiApproximatelyEqualIcon }}</v-icon>
               </v-list-item-icon>
               <v-list-item-subtitle>
-                {{ currentAccuracyRounded ? currentAccuracyRounded : "-na-" }}m
+                {{
+                  currentAccuracyRounded ? `${currentAccuracyRounded}m` : "-na-"
+                }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-col>
@@ -57,7 +55,9 @@
                 <v-icon>{{ mdiImageFilterHdrIcon }}</v-icon>
               </v-list-item-icon>
               <v-list-item-subtitle>
-                {{ currentAltitudeRounded ? currentAltitudeRounded : "-na-" }}
+                {{
+                  currentAltitudeRounded ? `${currentAltitudeRounded}m` : "-na-"
+                }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-col>
@@ -106,13 +106,25 @@
     <v-dialog v-if="trackingDialogVisible" :value="true" :max-width="300">
       <v-card>
         <v-card-title>Stop tracking</v-card-title>
-        <v-card-text>Sure stop tracking?</v-card-text>
+        <v-card-text>
+          <v-text-field
+            v-model="trackingRouteName"
+            label="Name"
+            name="name"
+            type="text"
+          ></v-text-field>
+        </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn text color="primary" @click="trackingDialogCancel">
             Cancel
           </v-btn>
-          <v-btn text color="primary" @click="trackingDialogConfirm">
+          <v-btn
+            text
+            color="primary"
+            :disabled="!trackingRouteName"
+            @click="trackingDialogConfirm"
+          >
             Confirm
           </v-btn>
         </v-card-actions>
@@ -169,7 +181,8 @@ export default Vue.extend({
     user: null as firebase.User | null,
     trackingUUID: null as string | null,
     trackingPaused: false,
-    trackingDialogVisible: false
+    trackingDialogVisible: false,
+    trackingRouteName: null as string | null
   }),
   computed: {
     currentSpeedInKmHRouned: function() {
@@ -287,6 +300,7 @@ export default Vue.extend({
       this.trackingPaused = false;
     },
     stopTracking: function() {
+      this.trackingRouteName = "My tour";
       this.trackingDialogVisible = true;
     },
     trackingDialogCancel: function() {
@@ -299,10 +313,10 @@ export default Vue.extend({
       this.positionHistory = [];
     },
     saveRoute: function() {
-      if (this.user && this.trackingUUID) {
+      if (this.user && this.trackingUUID && this.trackingRouteName) {
         const doc: Route = {
           uid: this.trackingUUID,
-          name: "Tour 1",
+          name: this.trackingRouteName,
           timestamp: new Date(),
           coordinates: []
         };
